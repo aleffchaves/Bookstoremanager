@@ -6,5 +6,6 @@ install: true
 cache:
    directories:
       - $JAVA_HOME/.m2
-
+   before_install:
+      - chmod +x mvnw
     
