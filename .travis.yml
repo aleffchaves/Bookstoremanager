@@ -6,4 +6,6 @@ install: true
 cache:
    directories:
       - $HOME/.m2
+before_install:
+  - chmod +x mvnw
     
