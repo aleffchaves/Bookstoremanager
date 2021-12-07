@@ -24,6 +24,7 @@ public class SwaggerConfig {
     private static final String CONTACT_GITHUB = "https://github.com/AlefMeira";
     private static final String CONTACT_EMAIL = "alef.test@gmail.com";
 
+
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
