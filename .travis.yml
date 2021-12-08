@@ -5,9 +5,9 @@ jdk: openjdk14
 install: true
 addons:
    sonarcloud:
-      organization: "alefmeira"
+      organization: $SONAR_ORGANIZATION
       token:
-         secure: "93d7ec392c35435758e6d512a32b6be41e6b8f2e" # encrypted value of your token
+         secure: "313bd225595227c38fc3c1234bab90ab04fc1959" # encrypted value of your token
 
 script:
    # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
