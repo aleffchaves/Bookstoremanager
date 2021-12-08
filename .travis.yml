@@ -6,12 +6,9 @@ install: true
 addons:
    sonarcloud:
       organization: $SONAR_ORGANIZATION
-      token:
-         secure: "313bd225595227c38fc3c1234bab90ab04fc1959" # encrypted value of your token
-
+      token: $SONAR_TOKEN
 script:
-   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
-   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=AlefMeira_Bookstoremanager
+   - mvn clean package sonar:sonar -P sonar
 cache:
    directories:
       - $HOME/.m2
