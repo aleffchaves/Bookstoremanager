@@ -5,8 +5,10 @@ jdk: openjdk14
 install: true
 addons:
    sonarcloud:
-      organization: $SONAR_ORGANIZATION
-      token: $SONAR_TOKEN
+      organization: "alefmeira"
+      token:
+         secure: "93d7ec392c35435758e6d512a32b6be41e6b8f2e" # encrypted value of your token
+
 script:
    # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
    - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=AlefMeira_Bookstoremanager
