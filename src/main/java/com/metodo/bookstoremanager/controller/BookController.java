@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api/v1/books")
 public class BookController {
 
-    @ApiOperation(value = "Return an example hello world")
+    @ApiOperation(value = "Return an example hello world  ")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success method return")})
     @GetMapping()
     public String hello(){
