@@ -15,6 +15,6 @@ public class BookController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success method return")})
     @GetMapping()
     public String hello(){
-        return "Hello BookstoreManager, I am running an exemple with PR";
+        return "Hello BookstoreManager, Local";
     }
 }
