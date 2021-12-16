@@ -4,6 +4,7 @@ import com.metodo.bookstoremanager.author.builder.AuthorDTOBuilder;
 import com.metodo.bookstoremanager.author.dto.AuthorDTO;
 import com.metodo.bookstoremanager.author.entity.Author;
 import com.metodo.bookstoremanager.author.exception.AuthorAlreadyExistsException;
+import com.metodo.bookstoremanager.author.exception.AuthorNotFoundException;
 import com.metodo.bookstoremanager.author.mapper.AuthorMapper;
 import com.metodo.bookstoremanager.author.repository.AuthorRepository;
 import org.hamcrest.core.IsEqual;
@@ -52,7 +53,6 @@ public class AuthorServiceTest {
 
     @Test
     void whenExistingAuthorIsInformedThenAnExceptionShouldBeThrown() {
-
         AuthorDTO expectedAuthorToCreteDTO =  authorDTOBuilder.buildAuthorDTO();
         Author expectedCreatedAuthor = authorMapper.toModel(expectedAuthorToCreteDTO);
 
@@ -60,6 +60,29 @@ public class AuthorServiceTest {
                 .thenReturn(Optional.of(expectedCreatedAuthor));
 
         assertThrows(AuthorAlreadyExistsException.class, () -> authorService.create(expectedAuthorToCreteDTO));
+    }
+
+    @Test
+    void whenValidIdIsGivenThenAnAuthorShouldBeReturned() {
+        AuthorDTO expectedFoundAuthorDTO = authorDTOBuilder.buildAuthorDTO();
+        Author expectedFoundAuthor = authorMapper.toModel(expectedFoundAuthorDTO);
+
+        when(authorRepository.findById(expectedFoundAuthor.getId()))
+                .thenReturn(Optional.of(expectedFoundAuthor));
+
+        AuthorDTO foundAuthorDTO = authorService.findById(expectedFoundAuthorDTO.getId());
+
+        assertThat(foundAuthorDTO, is(expectedFoundAuthorDTO));
+    }
+
+    @Test
+    void whenInvalidIdIsGivenThenAnExceptionShouldBeThrown() {
+        AuthorDTO expectedFoundAuthorDTO = authorDTOBuilder.buildAuthorDTO();
+
+        when(authorRepository.findById(expectedFoundAuthorDTO.getId()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(AuthorNotFoundException.class, () -> authorService.findById(expectedFoundAuthorDTO.getId()));
     }
 
     @BeforeEach
