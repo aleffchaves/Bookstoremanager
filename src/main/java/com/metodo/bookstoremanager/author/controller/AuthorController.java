@@ -26,8 +26,7 @@ public class AuthorController implements AuthorControllerDocs {
         return authorService.create(authorDTO);
     }
 
-    @GetMapping(path = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{id}")
     public AuthorDTO findById(@PathVariable Long id) {
         return authorService.findById(id);
     }
