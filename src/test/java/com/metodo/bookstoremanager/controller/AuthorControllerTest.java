@@ -20,6 +20,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import static com.metodo.bookstoremanager.utils.JsonConversionUtils.asJsonString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -72,5 +73,20 @@ public class AuthorControllerTest {
                 .content(asJsonString(expectedCreatedAuthorDTO)))
                 .andExpect(status().isBadRequest());
 
+    }
+
+    @Test
+    void whenGETWhitValidIdIsCalledThenStatusOkShouldBeReturned() throws Exception {
+        AuthorDTO expectedCreatedAuthorDTO = authorDTOBuilder.buildAuthorDTO();
+
+        when(authorService.findById(expectedCreatedAuthorDTO.getId())).thenReturn(expectedCreatedAuthorDTO);
+
+        mockMvc.perform(get(AUTHOR_API_URL_PATH + "/" + expectedCreatedAuthorDTO.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", Is.is(expectedCreatedAuthorDTO.getId().intValue())))
+                .andExpect(jsonPath("$.name", Is.is(expectedCreatedAuthorDTO.getName())))
+                .andExpect(jsonPath("$.age", Is.is(expectedCreatedAuthorDTO.getAge())));
     }
 }
