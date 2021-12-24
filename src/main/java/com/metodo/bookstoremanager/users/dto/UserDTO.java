@@ -1,6 +1,7 @@
 package com.metodo.bookstoremanager.users.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.metodo.bookstoremanager.users.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class UserDTO {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private String gender;
+    private Gender gender;
 
     @NotNull
     @NotEmpty
