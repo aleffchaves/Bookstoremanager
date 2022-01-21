@@ -40,7 +40,7 @@ public class UserDTO {
 
     @NotNull
     @NotEmpty
-    private String userName;
+    private String username;
 
     @NotNull
     @NotEmpty
