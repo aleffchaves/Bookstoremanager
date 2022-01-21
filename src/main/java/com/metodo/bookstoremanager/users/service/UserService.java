@@ -4,6 +4,7 @@ import com.metodo.bookstoremanager.users.dto.MessageDTO;
 import com.metodo.bookstoremanager.users.dto.UserDTO;
 import com.metodo.bookstoremanager.users.entity.User;
 import com.metodo.bookstoremanager.users.exception.UserAlreadyExistsException;
+import com.metodo.bookstoremanager.users.exception.UserNotFoundException;
 import com.metodo.bookstoremanager.users.mapper.UserMapper;
 import com.metodo.bookstoremanager.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class UserService {
 
     private static final UserMapper userMapper = UserMapper.INSTANCE;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -31,6 +32,16 @@ public class UserService {
         User userToCreate = userMapper.toModel(userToCreateDTO);
         User createdUser = userRepository.save(userToCreate);
         return creationMessage(createdUser);
+    }
+
+    public void delete(Long id) {
+        verifyIfExists(id);
+        userRepository.deleteById(id);
+    }
+
+    private void verifyIfExists(Long id) {
+        userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     private void verifyIfExists(String email, String username) {
@@ -48,4 +59,7 @@ public class UserService {
 
         return MessageDTO.builder().message(createdUserMessage).build();
     }
+
+
+
 }
