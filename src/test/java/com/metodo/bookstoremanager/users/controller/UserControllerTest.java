@@ -22,6 +22,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
 
@@ -50,15 +54,18 @@ public class UserControllerTest {
     void whenPOSTIsCalledThenStatusCreatedShouldBeReturned() throws Exception {
         UserDTO expectedUserToCreateDTO  = userDTOBuilder.buildUserDTO();
         String expectedCreationMessage = "User alefchaves with 1 successfully created";
-        MessageDTO expectedCreationMessageDTO = MessageDTO.builder().message(expectedCreationMessage).build();
+        MessageDTO expectedCreationMessageDTO = MessageDTO.builder()
+                .message(expectedCreationMessage).build();
 
-        Mockito.when(userService.create(expectedUserToCreateDTO )).thenReturn(expectedCreationMessageDTO);
+        Mockito.when(userService.create(expectedUserToCreateDTO ))
+                .thenReturn(expectedCreationMessageDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_API_URL_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonConversionUtils.asJsonString(expectedUserToCreateDTO)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is(expectedCreationMessage)));
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message",
+                        Matchers.is(expectedCreationMessage)));
     }
 
     @Test
@@ -69,6 +76,17 @@ public class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_API_URL_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonConversionUtils.asJsonString(expectedUserToCreateDTO)))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                        .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void whenDELETEWithValidIdIsCalledThenNoContentShouldBeInformed() throws Exception {
+        UserDTO expectedUserToDeleteDTO = userDTOBuilder.buildUserDTO();
+
+        doNothing().when(userService).delete(expectedUserToDeleteDTO.getId());
+
+        mockMvc.perform(delete(USERS_API_URL_PATH + "/" + expectedUserToDeleteDTO.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 }
