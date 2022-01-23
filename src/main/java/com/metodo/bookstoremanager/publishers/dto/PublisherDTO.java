@@ -1,6 +1,7 @@
 package com.metodo.bookstoremanager.publishers.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 
 @Data
 @RequiredArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 public class PublisherDTO {
 
