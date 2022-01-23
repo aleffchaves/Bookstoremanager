@@ -24,4 +24,10 @@ public class PublisherController implements PublisherControllerDocs {
     public PublisherDTO create(@RequestBody @Valid PublisherDTO publisherDTO) {
         return publisherService.create(publisherDTO);
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PublisherDTO findById(@PathVariable Long id) {
+        return publisherService.findById(id);
+    }
 }
