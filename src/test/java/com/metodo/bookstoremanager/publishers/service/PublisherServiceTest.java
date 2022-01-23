@@ -4,6 +4,7 @@ import com.metodo.bookstoremanager.publishers.builder.PublisherDTOBuilder;
 import com.metodo.bookstoremanager.publishers.dto.PublisherDTO;
 import com.metodo.bookstoremanager.publishers.entity.Publisher;
 import com.metodo.bookstoremanager.publishers.exception.PublisherAlreadyExistsException;
+import com.metodo.bookstoremanager.publishers.exception.PublisherNotFoundException;
 import com.metodo.bookstoremanager.publishers.mapper.PublisherMapper;
 import com.metodo.bookstoremanager.publishers.repository.PublisherRepository;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -20,6 +20,8 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PublisherServiceTest {
@@ -47,8 +49,8 @@ public class PublisherServiceTest {
         var name = expectedPublisherToCreateDTO.getName();
         var code = expectedPublisherToCreateDTO.getCode();
 
-        Mockito.when(publisherRepository.findByNameOrCode(name, code)).thenReturn(Optional.empty());
-        Mockito.when(publisherRepository.save(expectedPublisherToCreated)).thenReturn(expectedPublisherToCreated);
+        when(publisherRepository.findByNameOrCode(name, code)).thenReturn(Optional.empty());
+        when(publisherRepository.save(expectedPublisherToCreated)).thenReturn(expectedPublisherToCreated);
 
         PublisherDTO createdPublisherDTO = publisherService.create(expectedPublisherToCreateDTO);
 
@@ -63,9 +65,33 @@ public class PublisherServiceTest {
         var name = expectedPublisherToCreateDTO.getName();
         var code = expectedPublisherToCreateDTO.getCode();
 
-        Mockito.when(publisherRepository.findByNameOrCode(name, code))
+        when(publisherRepository.findByNameOrCode(name, code))
                 .thenReturn(Optional.of(expectedPublisherDuplicated));
 
-        Assertions.assertThrows(PublisherAlreadyExistsException.class,
-                () -> publisherService.create(expectedPublisherToCreateDTO));    }
+        assertThrows(PublisherAlreadyExistsException.class,
+                () -> publisherService.create(expectedPublisherToCreateDTO));
+    }
+
+    @Test
+    void whenValidIdIsGivenThenPublisherShouldBeReturned() {
+        PublisherDTO expectedPublisherFoundDTO = publisherDTOBuilder.buildPublisherDTOBuilder();
+        Publisher expectedPublisherFound = publisherMapper.toModel(expectedPublisherFoundDTO);
+        var expectedPublisherFoundId = expectedPublisherFoundDTO.getId();
+
+        when(publisherRepository.findById(expectedPublisherFoundId)).thenReturn(Optional.of(expectedPublisherFound));
+
+        PublisherDTO foundPublisherDTO = publisherService.findById(expectedPublisherFoundId);
+
+        assertThat(foundPublisherDTO, is(equalTo(foundPublisherDTO)));
+    }
+
+    @Test
+    void whenInvalidIdIsGivenThenAnExceptionShouldBeThrown() {
+        PublisherDTO expectedPublisherFoundDTO = publisherDTOBuilder.buildPublisherDTOBuilder();
+        var expectedPublisherFoundId = expectedPublisherFoundDTO.getId();
+
+        when(publisherRepository.findById(expectedPublisherFoundId)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(PublisherNotFoundException.class, () -> publisherService.findById(expectedPublisherFoundId));
+    }
 }
