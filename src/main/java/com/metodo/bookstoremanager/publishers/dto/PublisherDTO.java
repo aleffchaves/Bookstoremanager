@@ -11,7 +11,6 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class PublisherDTO {
