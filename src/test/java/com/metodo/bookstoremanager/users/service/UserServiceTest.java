@@ -8,9 +8,8 @@ import com.metodo.bookstoremanager.users.exception.UserAlreadyExistsException;
 import com.metodo.bookstoremanager.users.exception.UserNotFoundException;
 import com.metodo.bookstoremanager.users.mapper.UserMapper;
 import com.metodo.bookstoremanager.users.repository.UserRepository;
-
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -56,7 +56,7 @@ public class UserServiceTest {
 
         MessageDTO creationMessage = userService.create(expectedCreatedUserDTO);
 
-        MatcherAssert.assertThat(expectedCreationMessage, Matchers.is(Matchers.equalTo(creationMessage.getMessage())));
+        assertThat(expectedCreationMessage, Matchers.is(Matchers.equalTo(creationMessage.getMessage())));
     }
 
     @Test
@@ -95,5 +95,29 @@ public class UserServiceTest {
         when(userRepository.findById(expectedDeletedUserId)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.delete(expectedDeletedUserId));
+    }
+
+    @Test
+    void whenExistingUserIsInformedThenItShouldBeUpdated() {
+        UserDTO expectedUpdatedUserDTO = userDTOBuilder.buildUserDTO();
+        expectedUpdatedUserDTO.setUsername("alefUpdate");
+        User expectedUpdatedUser = userMapper.toModel(expectedUpdatedUserDTO);
+        String expectedUpdatedMessage = "User alefUpdate with 1 successfully updated";
+
+        Mockito.when(userRepository.findById(expectedUpdatedUserDTO.getId())).thenReturn(Optional.of(expectedUpdatedUser));
+        Mockito.when(userRepository.save(expectedUpdatedUser)).thenReturn(expectedUpdatedUser);
+
+        MessageDTO successUpdatedMessage = userService.update(expectedUpdatedUserDTO.getId(), expectedUpdatedUserDTO);
+
+        assertThat(successUpdatedMessage.getMessage(), IsEqual.equalToObject(expectedUpdatedMessage));
+    }
+
+    @Test
+    void whenExistingUserIsInformedThenItShouldBeThrown() {
+        UserDTO expectedUpdatedUserDTO = userDTOBuilder.buildUserDTO();
+
+        when(userRepository.findById(expectedUpdatedUserDTO.getId())).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.update(expectedUpdatedUserDTO.getId(), expectedUpdatedUserDTO));
     }
 }
