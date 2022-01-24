@@ -1,5 +1,6 @@
 package com.metodo.bookstoremanager.users.service;
 
+import com.metodo.bookstoremanager.config.PasswordEncodingConfig;
 import com.metodo.bookstoremanager.users.builder.UserDTOBuilder;
 import com.metodo.bookstoremanager.users.dto.MessageDTO;
 import com.metodo.bookstoremanager.users.dto.UserDTO;
@@ -17,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -32,6 +34,9 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -52,6 +57,7 @@ public class UserServiceTest {
         String expectedUseremail = expectedCreatedUserDTO.getEmail();
         String expectedUserusername = expectedCreatedUserDTO.getUsername();
         when(userRepository.findByEmailOrUsername(expectedUseremail, expectedUserusername)).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(expectedCreatedUser.getPassword())).thenReturn(expectedCreatedUser.getPassword());
         when(userRepository.save(expectedCreatedUser)).thenReturn(expectedCreatedUser);
 
         MessageDTO creationMessage = userService.create(expectedCreatedUserDTO);
@@ -105,6 +111,7 @@ public class UserServiceTest {
         String expectedUpdatedMessage = "User alefUpdate with 1 successfully updated";
 
         Mockito.when(userRepository.findById(expectedUpdatedUserDTO.getId())).thenReturn(Optional.of(expectedUpdatedUser));
+        Mockito.when(passwordEncoder.encode(expectedUpdatedUser.getPassword())).thenReturn(expectedUpdatedUser.getPassword());
         Mockito.when(userRepository.save(expectedUpdatedUser)).thenReturn(expectedUpdatedUser);
 
         MessageDTO successUpdatedMessage = userService.update(expectedUpdatedUserDTO.getId(), expectedUpdatedUserDTO);
