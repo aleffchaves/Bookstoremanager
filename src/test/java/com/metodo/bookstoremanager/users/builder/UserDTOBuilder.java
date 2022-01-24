@@ -2,6 +2,7 @@ package com.metodo.bookstoremanager.users.builder;
 
 import com.metodo.bookstoremanager.users.dto.UserDTO;
 import com.metodo.bookstoremanager.users.enums.Gender;
+import com.metodo.bookstoremanager.users.enums.Role;
 import lombok.Builder;
 import lombok.Builder.Default;
 
@@ -34,6 +35,9 @@ public class UserDTOBuilder {
     @Default
     private LocalDate birthDate = LocalDate.of(1994, 11,13);
 
+    @Default
+    private Role role = Role.USER;
+
     public UserDTO buildUserDTO() {
         return new UserDTO(
                 id,
@@ -43,7 +47,8 @@ public class UserDTOBuilder {
                 email,
                 username,
                 password,
-                birthDate
+                birthDate,
+                role
         );
     }
 
