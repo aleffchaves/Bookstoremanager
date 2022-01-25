@@ -2,10 +2,12 @@ package com.metodo.bookstoremanager.users.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.metodo.bookstoremanager.users.enums.Gender;
+import com.metodo.bookstoremanager.users.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.Max;
@@ -49,4 +51,7 @@ public class UserDTO {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthdate;
+
+    @NotNull
+    private Role role;
 }
