@@ -4,39 +4,40 @@ import com.metodo.bookstoremanager.users.dto.UserDTO;
 import com.metodo.bookstoremanager.users.enums.Gender;
 import com.metodo.bookstoremanager.users.enums.Role;
 import lombok.Builder;
-import lombok.Builder.Default;
-
 import java.time.LocalDate;
 
 @Builder
 public class UserDTOBuilder {
 
-    @Default
+    @Builder.Default
     private Long id = 1L;
 
-    @Default
+    @Builder.Default
     private String name = "Alef";
 
-    @Default
+    @Builder.Default
     private int age = 27;
 
-    @Default
+    @Builder.Default
     private Gender gender = Gender.MALE;
 
-    @Default
+    @Builder.Default
     private String email = "alef@email.com";
 
-    @Default
+    @Builder.Default
     private String username = "alefchaves";
 
-    @Default
+    @Builder.Default
     private String password = "123456";
 
-    @Default
+    @Builder.Default
+    private Role role = Role.ADMIN;
+
+    @Builder.Default
     private LocalDate birthDate = LocalDate.of(1994, 11,13);
 
-    @Default
-    private Role role = Role.USER;
+
+
 
     public UserDTO buildUserDTO() {
         return new UserDTO(
