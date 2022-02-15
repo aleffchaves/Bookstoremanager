@@ -36,9 +36,6 @@ public class UserDTOBuilder {
     @Builder.Default
     private LocalDate birthDate = LocalDate.of(1994, 11,13);
 
-
-
-
     public UserDTO buildUserDTO() {
         return new UserDTO(
                 id,

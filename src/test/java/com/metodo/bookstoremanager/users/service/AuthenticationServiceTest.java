@@ -19,14 +19,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthenticationServiceTest {
+
     private final UserMapper userMapper = UserMapper.INSTANCE;
 
     @Mock
@@ -42,32 +41,38 @@ public class AuthenticationServiceTest {
         userDTOBuilder = UserDTOBuilder.builder().build();
     }
 
+
     @Test
-    void whenUsernameIsInformedThenUserShouldBeReturned() {
-        UserDTO expectedFoundUserDTO = userDTOBuilder.buildUserDTO();
+    void whenUserIsInformedThenUserShouldBeReturned() {
+        UserDTO expectedFoundUserDTO =  userDTOBuilder.buildUserDTO();
         User expectedFoundUser = userMapper.toModel(expectedFoundUserDTO);
-
-        SimpleGrantedAuthority expectedUserRole =
-                new SimpleGrantedAuthority("ROLE_" + expectedFoundUserDTO.getRole().getDescription());
-
+        SimpleGrantedAuthority expectedUserRole = new SimpleGrantedAuthority
+                (
+                "ROLE_" + expectedFoundUserDTO.getRole().getDescription()
+                );
         String expectedUsername = expectedFoundUserDTO.getUsername();
 
-        when(userRepository.findByUsername(expectedUsername)).thenReturn(Optional.of(expectedFoundUser));
 
-        UserDetails userDetails =authenticationService.loadUserByUsername(expectedUsername);
+        when(userRepository.findByUsername(expectedFoundUserDTO.getUsername()))
+                .thenReturn(Optional.of(expectedFoundUser));
 
-        assertThat(userDetails.getUsername(), is(equalTo(expectedFoundUser.getUsername())));
-        assertThat(userDetails.getPassword(), is(equalTo(expectedFoundUser.getPassword())));
+
+       UserDetails userDetails = authenticationService.loadUserByUsername(expectedUsername);
+
+        assertThat(userDetails.getUsername(), Matchers.is(Matchers.equalTo(expectedFoundUser.getUsername())));
+        assertThat(userDetails.getPassword(), Matchers.is(Matchers.equalTo(expectedFoundUser.getPassword())));
         assertTrue(userDetails.getAuthorities().contains(expectedUserRole));
+
     }
 
     @Test
-    void whenInvalidUsernameIsInformedThenAnExceptionShouldBeThrown() {
+    void whenInvalidUserIdIsInformedThenAnExceptionShouldBeThrown() {
         UserDTO expectedFoundUserDTO = userDTOBuilder.buildUserDTO();
         String expectedUsername = expectedFoundUserDTO.getUsername();
 
-        when(userRepository.findByUsername(expectedFoundUserDTO.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(expectedUsername)).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> authenticationService.loadUserByUsername(expectedUsername));
     }
+
 }
