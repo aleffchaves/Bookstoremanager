@@ -15,7 +15,7 @@ public class JwtRequest {
 
     @NotEmpty
     @NotNull
-    private String user;
+    private String username;
 
     @NotEmpty
     @NotNull
