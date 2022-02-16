@@ -18,3 +18,7 @@ logging:
   level:
     com:
       metodo: INFO
+
+jwt:
+  secret: bookstoremanager
+  validity: 18000
