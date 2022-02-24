@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -29,14 +30,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String BOOKS_API_URL = "/api/v1/books/**";
     private static final String H2_CONSOLE_URL = "/h2-console/**";
     private static final String SWAGGER_URL = "/swagger-ui.html";
-    private static final String ROLE_USER = Role.ADMIN.getDescription();
-    private static final String ROLE_ADMIN = Role.USER.getDescription();
+    private static final String ROLE_ADMIN = Role.ADMIN.getDescription();
+    private static final String ROLE_USER = Role.USER.getDescription();
 
     private static final String[] SWAGGER_RESOURCES = {
-            // -- SWAGGER UI
+            // -- swagger ui
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",
+            "/configuration/ui",
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**"
@@ -48,6 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private PasswordEncoder passwordEncoder;
 
+    private JwtRequestFilter jwtRequestFilter;
+
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
@@ -69,11 +74,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         httpSecurity.headers().frameOptions().disable();
+
+        httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers(SWAGGER_RESOURCES);
     }
 }

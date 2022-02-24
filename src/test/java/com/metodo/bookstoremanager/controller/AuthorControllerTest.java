@@ -4,6 +4,10 @@ import com.metodo.bookstoremanager.author.builder.AuthorDTOBuilder;
 import com.metodo.bookstoremanager.author.controller.AuthorController;
 import com.metodo.bookstoremanager.author.dto.AuthorDTO;
 import com.metodo.bookstoremanager.author.service.AuthorService;
+import com.metodo.bookstoremanager.users.builder.JwtRequestBuilder;
+import com.metodo.bookstoremanager.users.dto.JwtRequest;
+import com.metodo.bookstoremanager.users.dto.JwtResponse;
+import com.metodo.bookstoremanager.users.service.AuthenticationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +22,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.util.Collections;
 
+import static com.metodo.bookstoremanager.users.controller.UserControllerTest.USERS_API_URL_PATH;
 import static com.metodo.bookstoremanager.utils.JsonConversionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.doNothing;
@@ -39,6 +44,8 @@ public class AuthorControllerTest {
     private MockMvc mockMvc;
 
     private AuthorDTOBuilder authorDTOBuilder;
+
+
 
     @BeforeEach
     void setUp(){
@@ -115,4 +122,5 @@ public class AuthorControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
+
 }

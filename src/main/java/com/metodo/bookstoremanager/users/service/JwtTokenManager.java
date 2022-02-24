@@ -16,8 +16,8 @@ import java.util.function.Function;
 @Component
 public class JwtTokenManager {
 
-    private Long jwtTokenValidity;
-    private String secret;
+    private final Long jwtTokenValidity;
+    private final String secret;
 
     public JwtTokenManager(
             @Value("${jwt.validity}") Long jwtTokenValidity,
@@ -27,7 +27,7 @@ public class JwtTokenManager {
     }
 
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<String, Object>();
+        Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(userDetails.getUsername(), claims);
     }
 
@@ -36,7 +36,7 @@ public class JwtTokenManager {
                 .setClaims(claims).setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1000))
-                .signWith(SignatureAlgorithm.ES512, secret).compact();
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
     public String getUsernameFromToken(String token) {
