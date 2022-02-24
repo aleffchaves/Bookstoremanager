@@ -1,5 +1,7 @@
 package com.metodo.bookstoremanager.users.controller;
 
+import com.metodo.bookstoremanager.users.dto.JwtRequest;
+import com.metodo.bookstoremanager.users.dto.JwtResponse;
 import com.metodo.bookstoremanager.users.dto.MessageDTO;
 import com.metodo.bookstoremanager.users.dto.UserDTO;
 import io.swagger.annotations.Api;
@@ -34,4 +36,11 @@ public interface UserControllerDocs {
             @ApiResponse(code = 404, message = "User with informed id not found in the system")
     })
     MessageDTO update(Long id, UserDTO userToUpdateDTO);
+
+    @ApiOperation(value = "User authentication operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success user authenticated"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
+    JwtResponse createdAuthenticationToken(JwtRequest jwtRequest);
 }
