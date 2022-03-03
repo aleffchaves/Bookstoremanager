@@ -1,7 +1,5 @@
 package com.metodo.bookstoremanager.users.exception;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
-
 import javax.persistence.EntityNotFoundException;
 
 public class UserNotFoundException extends EntityNotFoundException {
