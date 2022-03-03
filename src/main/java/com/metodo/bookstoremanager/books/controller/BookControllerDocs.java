@@ -8,8 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import static org.yaml.snakeyaml.tokens.Token.ID.Value;
-
 @Api("Books module management")
 public interface BookControllerDocs {
 
@@ -19,4 +17,11 @@ public interface BookControllerDocs {
             @ApiResponse(code = 400, message = "Missing required field, wrong field range value or book already registered on system")
     })
     BookResponseDTO create(AuthenticatedUser authenticatedUser, BookRequestDTO bookRequestDTO);
+
+    @ApiOperation(value = "Find a book by id operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Success book found"),
+            @ApiResponse(code = 404, message = "Book not found error")
+    })
+    BookResponseDTO findByIdAndUser(AuthenticatedUser authenticatedUser, Long bookId);
 }

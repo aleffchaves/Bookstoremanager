@@ -8,6 +8,7 @@ import com.metodo.bookstoremanager.books.dto.BookRequestDTO;
 import com.metodo.bookstoremanager.books.dto.BookResponseDTO;
 import com.metodo.bookstoremanager.books.entity.Book;
 import com.metodo.bookstoremanager.books.exception.BookAlreadyExistsException;
+import com.metodo.bookstoremanager.books.exception.BookNotFoundException;
 import com.metodo.bookstoremanager.books.mapper.BookMapper;
 import com.metodo.bookstoremanager.books.repository.BookRepository;
 import com.metodo.bookstoremanager.publishers.entity.Publisher;
@@ -27,6 +28,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -97,5 +99,39 @@ public class BookServiceTest {
                 eq(expectedBookToCreateDTO.getIsbn()),
                 any(User.class))).thenReturn(Optional.of(expectedDuplicatedBook));
         assertThrows(BookAlreadyExistsException.class, () -> bookService.create(authenticatedUser, expectedBookToCreateDTO));
+    }
+
+    @Test
+    void whenExistingBookIsInformedThenABookShouldBeReturned() {
+        BookRequestDTO expectedBookToFindDTO = bookRequestDTOBuilder.buildRequestBookDTO();
+        BookResponseDTO expectedFoundBookDTO = bookResponseDTOBuilder.buildResponseBookDTO();
+        Book expectedFoundBook = bookMapper.toModel(expectedFoundBookDTO);
+
+        when(userService.verifyAndGetUserIfExists(authenticatedUser.getUsername()))
+                .thenReturn(new User());
+        when(bookRepository.findByIdAndUser(
+                eq(expectedBookToFindDTO.getId()),
+                any(User.class))).thenReturn(Optional.of(expectedFoundBook));
+
+        BookResponseDTO foundBookDTO = bookService.findByIdAndUser(authenticatedUser, expectedBookToFindDTO.getId());
+
+        assertThat(foundBookDTO, is(equalTo(expectedFoundBookDTO)));
+    }
+
+    @Test
+    void whenNotExistingBookIsInformedThenAnExceptionShouldBeThrown() {
+        BookRequestDTO expectedBookToFindDTO = bookRequestDTOBuilder.buildRequestBookDTO();
+        BookResponseDTO expectedFoundBookDTO = bookResponseDTOBuilder.buildResponseBookDTO();
+        Book expectedFoundBook = bookMapper.toModel(expectedFoundBookDTO);
+
+        when(userService.verifyAndGetUserIfExists(authenticatedUser.getUsername()))
+                .thenReturn(new User());
+        when(bookRepository.findByIdAndUser(
+                eq(expectedBookToFindDTO.getId()),
+                any(User.class))).thenReturn(Optional.empty());
+
+        assertThrows(BookNotFoundException.class,
+                () -> bookService.findByIdAndUser(authenticatedUser, expectedBookToFindDTO.getId()));
+
     }
 }
