@@ -35,7 +35,7 @@ public class BookResponseDTOBuilder {
 
     private final UserDTO userDTO = UserDTOBuilder.builder().build().buildUserDTO();
 
-    public BookResponseDTO buildRequestBookDTO() {
+    public BookResponseDTO buildResponseBookDTO() {
         return new BookResponseDTO(
                 id,
                 name,
