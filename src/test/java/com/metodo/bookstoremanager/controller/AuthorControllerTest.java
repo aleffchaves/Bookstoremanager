@@ -4,6 +4,7 @@ import com.metodo.bookstoremanager.author.builder.AuthorDTOBuilder;
 import com.metodo.bookstoremanager.author.controller.AuthorController;
 import com.metodo.bookstoremanager.author.dto.AuthorDTO;
 import com.metodo.bookstoremanager.author.service.AuthorService;
+import com.metodo.bookstoremanager.books.dto.BookRequestDTO;
 import com.metodo.bookstoremanager.users.builder.JwtRequestBuilder;
 import com.metodo.bookstoremanager.users.dto.JwtRequest;
 import com.metodo.bookstoremanager.users.dto.JwtResponse;

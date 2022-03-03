@@ -6,6 +6,7 @@ import com.metodo.bookstoremanager.books.dto.BookRequestDTO;
 import com.metodo.bookstoremanager.books.dto.BookResponseDTO;
 import com.metodo.bookstoremanager.books.entity.Book;
 import com.metodo.bookstoremanager.books.exception.BookAlreadyExistsException;
+import com.metodo.bookstoremanager.books.exception.BookNotFoundException;
 import com.metodo.bookstoremanager.books.mapper.BookMapper;
 import com.metodo.bookstoremanager.books.repository.BookRepository;
 import com.metodo.bookstoremanager.publishers.entity.Publisher;
@@ -53,6 +54,15 @@ public class BookService {
                     throw new BookAlreadyExistsException(bookRequestDTO.getName(), bookRequestDTO.getIsbn(), foundUser.getUsername());
                 } );
     }
+
+    public BookResponseDTO findByIdAndUser(AuthenticatedUser authenticatedUser, Long bookId) {
+        User foundAuthenticatedUser = userService.verifyAndGetUserIfExists(authenticatedUser.getUsername());
+        return bookRepository.findByIdAndUser(bookId, foundAuthenticatedUser)
+                .map(bookMapper::toDTO)
+                .orElseThrow(() ->  new BookNotFoundException(bookId));
+    }
+
+
 
 
 }
