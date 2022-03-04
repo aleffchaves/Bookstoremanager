@@ -20,6 +20,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -34,7 +35,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
@@ -160,4 +161,31 @@ public class BookServiceTest {
 
         assertThat(returnedBooksResponseList.size(), is(0));
     }
+
+    @Test
+    void whenExistingBookIdIsInformedThenItShouldBeDeleted() {
+        BookResponseDTO expectedBookToDeleteDTO = bookResponseDTOBuilder.buildResponseBookDTO();
+        Book expectedBookToDelete = bookMapper.toModel(expectedBookToDeleteDTO);
+
+        when(userService.verifyAndGetUserIfExists(authenticatedUser.getUsername())).thenReturn(new User());
+        when(bookRepository.findByIdAndUser(eq(expectedBookToDeleteDTO.getId()), any(User.class)))
+                .thenReturn(Optional.of(expectedBookToDelete));
+        doNothing().when(bookRepository).deleteByIdAndUser(eq(expectedBookToDeleteDTO.getId()), any(User.class));
+
+        bookService.deleteByIdAndUser(authenticatedUser, expectedBookToDelete.getId());
+
+        verify(bookRepository, times(1)).deleteByIdAndUser(eq(expectedBookToDeleteDTO.getId()), any(User.class));
+    }
+
+    @Test
+    void whenNotExistingBookIsInformedForDeleteThenAnExceptionShouldBeThrown() {
+        BookResponseDTO expectedBookToDeleteDTO = bookResponseDTOBuilder.buildResponseBookDTO();
+
+        when(userService.verifyAndGetUserIfExists(authenticatedUser.getUsername())).thenReturn(new User());
+        when(bookRepository.findByIdAndUser(eq(expectedBookToDeleteDTO.getId()), any(User.class)))
+                .thenReturn(Optional.empty());
+
+        assertThrows(BookNotFoundException.class, () -> bookService.deleteByIdAndUser(authenticatedUser, expectedBookToDeleteDTO.getId()));
+    }
+
 }

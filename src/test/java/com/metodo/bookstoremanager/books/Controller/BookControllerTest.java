@@ -26,6 +26,7 @@ import static com.metodo.bookstoremanager.utils.JsonConversionUtils.asJsonString
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -116,5 +117,17 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$[0].name", is(expectedFoundBookDTO.getName())))
                 .andExpect(jsonPath("$[0].isbn", is(expectedFoundBookDTO.getIsbn())));
     }
+
+    @Test
+    void whenDELETEIsCalledWithValidBookIdThenNoContentOkShouldBeInformed() throws Exception {
+        BookRequestDTO expectedBookToDeleteDTO = bookRequestDTOBuilder.buildRequestBookDTO();
+
+        doNothing().when(bookService).deleteByIdAndUser(any(AuthenticatedUser.class), eq(expectedBookToDeleteDTO.getId()));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(BOOKS_API_URL_PATH + "/" + expectedBookToDeleteDTO.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
 
 }
