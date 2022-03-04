@@ -71,7 +71,7 @@ public class PublisherControllerTest {
         expectedCreatedPublisherDTO.setName(null);
 
         mockMvc.perform(post(PUBLISHERS_API_URL_PATH).contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(expectedCreatedPublisherDTO))).andExpect(status().isBadRequest());
+                .content(asJsonString(expectedCreatedPublisherDTO))).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class PublisherControllerTest {
         when(publisherService.findAll()).thenReturn(Collections.singletonList(expectedPublisherListDTO));
 
         mockMvc.perform(get(PUBLISHERS_API_URL_PATH)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(expectedPublisherListDTO.getId().intValue())))
                 .andExpect(jsonPath("$[0].name", is(expectedPublisherListDTO.getName())))
@@ -111,6 +111,6 @@ public class PublisherControllerTest {
         doNothing().when(publisherService).delete(expectedPublisherIdToDeleted);
 
         mockMvc.perform(delete(PUBLISHERS_API_URL_PATH + "/" + expectedPublisherIdToDeleted)
-                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
     }
 }

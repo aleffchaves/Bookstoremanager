@@ -40,7 +40,7 @@ public class AuthorServiceTest {
     @Test
     void whenNewAuthorIsInformedThenItShowBeCreated() {
         //given
-        AuthorDTO expectedAuthorToCreteDTO =  authorDTOBuilder.buildAuthorDTO();
+        AuthorDTO expectedAuthorToCreteDTO = authorDTOBuilder.buildAuthorDTO();
         Author expectedCreatedAuthor = authorMapper.toModel(expectedAuthorToCreteDTO);
 
         //when
@@ -55,7 +55,7 @@ public class AuthorServiceTest {
 
     @Test
     void whenExistingAuthorIsInformedThenAnExceptionShouldBeThrown() {
-        AuthorDTO expectedAuthorToCreteDTO =  authorDTOBuilder.buildAuthorDTO();
+        AuthorDTO expectedAuthorToCreteDTO = authorDTOBuilder.buildAuthorDTO();
         Author expectedCreatedAuthor = authorMapper.toModel(expectedAuthorToCreteDTO);
 
         when(authorRepository.findByName(expectedAuthorToCreteDTO.getName()))
@@ -134,7 +134,7 @@ public class AuthorServiceTest {
     }
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         authorDTOBuilder = AuthorDTOBuilder.builder().build();
     }
 }

@@ -23,7 +23,7 @@ public class AuthorController implements AuthorControllerDocs {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public AuthorDTO create(@RequestBody @Valid  AuthorDTO authorDTO) {
+    public AuthorDTO create(@RequestBody @Valid AuthorDTO authorDTO) {
         return authorService.create(authorDTO);
     }
 

@@ -7,8 +7,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -41,4 +39,12 @@ public interface BookControllerDocs {
             @ApiResponse(code = 404, message = "Book not found error")
     })
     void deleteByIdAndUser(AuthenticatedUser authenticatedUser, Long bookId);
+
+    @ApiOperation(value = "Update a book by id operation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Book by user successfully updated"),
+            @ApiResponse(code = 400, message = "Missing required fields, wrong field range value or book already registered on system"),
+            @ApiResponse(code = 404, message = "Book not found error")
+    })
+    BookResponseDTO updateByIdAndUser(AuthenticatedUser authenticatedUser, Long bookId, BookRequestDTO bookRequestDTO);
 }

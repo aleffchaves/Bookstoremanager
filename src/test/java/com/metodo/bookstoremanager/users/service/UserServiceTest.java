@@ -1,6 +1,5 @@
 package com.metodo.bookstoremanager.users.service;
 
-import com.metodo.bookstoremanager.config.PasswordEncodingConfig;
 import com.metodo.bookstoremanager.users.builder.UserDTOBuilder;
 import com.metodo.bookstoremanager.users.dto.MessageDTO;
 import com.metodo.bookstoremanager.users.dto.UserDTO;

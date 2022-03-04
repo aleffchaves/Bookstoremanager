@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import static org.hamcrest.Matchers.is;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import static com.metodo.bookstoremanager.utils.JsonConversionUtils.asJsonString;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -64,17 +64,17 @@ public class UserControllerTest {
 
     @Test
     void whenPOSTIsCalledThenStatusCreatedShouldBeReturned() throws Exception {
-        UserDTO expectedUserToCreateDTO  = userDTOBuilder.buildUserDTO();
+        UserDTO expectedUserToCreateDTO = userDTOBuilder.buildUserDTO();
         String expectedCreationMessage = "User alefchaves with 1 successfully created";
         MessageDTO expectedCreationMessageDTO = MessageDTO.builder()
                 .message(expectedCreationMessage).build();
 
-        Mockito.when(userService.create(expectedUserToCreateDTO ))
+        Mockito.when(userService.create(expectedUserToCreateDTO))
                 .thenReturn(expectedCreationMessageDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_API_URL_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(expectedUserToCreateDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(expectedUserToCreateDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message",
                         Matchers.is(expectedCreationMessage)));
@@ -82,13 +82,13 @@ public class UserControllerTest {
 
     @Test
     void whenPOSTIsCalledWithOutRequiredFieldThenBadRequestStatusShouldBeReturned() throws Exception {
-        UserDTO expectedUserToCreateDTO  = userDTOBuilder.buildUserDTO();
+        UserDTO expectedUserToCreateDTO = userDTOBuilder.buildUserDTO();
         expectedUserToCreateDTO.setUsername(null);
 
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_API_URL_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(expectedUserToCreateDTO)))
-                        .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -98,7 +98,7 @@ public class UserControllerTest {
         doNothing().when(userService).delete(expectedUserToDeleteDTO.getId());
 
         mockMvc.perform(delete(USERS_API_URL_PATH + "/" + expectedUserToDeleteDTO.getId())
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
 
@@ -114,8 +114,8 @@ public class UserControllerTest {
                 .thenReturn(expectedUpdatedMessageDTO);
 
         mockMvc.perform(put(USERS_API_URL_PATH + "/" + expectedUserToUpdateId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(expectedUserToUpdateDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(expectedUserToUpdateDTO)))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message", Matchers.is(expectedUpdatedMessage)));
 
@@ -130,8 +130,8 @@ public class UserControllerTest {
                 .thenReturn(expectedJwtToken);
 
         mockMvc.perform(post(USERS_API_URL_PATH + "/authenticate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(jwtRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(jwtRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.jwtToken", is(expectedJwtToken.getJwtToken())));
     }
