@@ -4,21 +4,17 @@ import com.metodo.bookstoremanager.books.dto.BookRequestDTO;
 import com.metodo.bookstoremanager.books.dto.BookResponseDTO;
 import com.metodo.bookstoremanager.books.service.BookService;
 import com.metodo.bookstoremanager.users.dto.AuthenticatedUser;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/books")
-public class BookController implements BookControllerDocs{
+public class BookController implements BookControllerDocs {
 
     private BookService bookService;
 
@@ -46,10 +42,15 @@ public class BookController implements BookControllerDocs{
         return bookService.findAllByUser(authenticatedUser);
     }
 
-
     @DeleteMapping("/{bookId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByIdAndUser(@AuthenticationPrincipal AuthenticatedUser authenticatedUser, @PathVariable Long bookId) {
         bookService.deleteByIdAndUser(authenticatedUser, bookId);
+    }
+
+    @PutMapping("/{bookId}")
+    public BookResponseDTO updateByIdAndUser(@AuthenticationPrincipal AuthenticatedUser authenticatedUser,
+                                             @PathVariable Long bookId, @RequestBody @Valid BookRequestDTO bookRequestDTO) {
+        return bookService.updateByIdAndUser(authenticatedUser, bookId, bookRequestDTO);
     }
 }

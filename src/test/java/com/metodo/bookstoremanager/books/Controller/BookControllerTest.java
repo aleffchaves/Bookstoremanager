@@ -78,14 +78,14 @@ public class BookControllerTest {
     }
 
     @Test
-    void whenPOSTIsCalledWithOutRequiredFieldThenBadRequestStatusShouldBeReturned () throws Exception {
+    void whenPOSTIsCalledWithOutRequiredFieldThenBadRequestStatusShouldBeReturned() throws Exception {
         BookRequestDTO expectedBookToCreateDTO = bookRequestDTOBuilder.buildRequestBookDTO();
         expectedBookToCreateDTO.setIsbn(null);
 
         mockMvc.perform(MockMvcRequestBuilders.post(BOOKS_API_URL_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(expectedBookToCreateDTO)))
-                        .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -93,11 +93,11 @@ public class BookControllerTest {
         BookRequestDTO expectedBookToFindDTO = bookRequestDTOBuilder.buildRequestBookDTO();
         BookResponseDTO expectedFoundBookDTO = bookResponseDTOBuilder.buildResponseBookDTO();
 
-        when(bookService.findByIdAndUser(any(AuthenticatedUser.class),eq(expectedBookToFindDTO.getId())))
+        when(bookService.findByIdAndUser(any(AuthenticatedUser.class), eq(expectedBookToFindDTO.getId())))
                 .thenReturn(expectedFoundBookDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_API_URL_PATH + "/" + expectedBookToFindDTO.getId())
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(expectedFoundBookDTO.getId().intValue())))
                 .andExpect(jsonPath("$.name", is(expectedFoundBookDTO.getName())))
@@ -112,7 +112,7 @@ public class BookControllerTest {
                 .thenReturn(Collections.singletonList(expectedFoundBookDTO));
 
         mockMvc.perform(MockMvcRequestBuilders.get(BOOKS_API_URL_PATH)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id", is(expectedFoundBookDTO.getId().intValue())))
                 .andExpect(jsonPath("$[0].name", is(expectedFoundBookDTO.getName())))
                 .andExpect(jsonPath("$[0].isbn", is(expectedFoundBookDTO.getIsbn())));
@@ -125,9 +125,25 @@ public class BookControllerTest {
         doNothing().when(bookService).deleteByIdAndUser(any(AuthenticatedUser.class), eq(expectedBookToDeleteDTO.getId()));
 
         mockMvc.perform(MockMvcRequestBuilders.delete(BOOKS_API_URL_PATH + "/" + expectedBookToDeleteDTO.getId())
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
 
+    @Test
+    void whenPUTIsCalledThenOkStatusShouldBeReturned() throws Exception {
+        BookRequestDTO expectedBookToUpdateDTO = bookRequestDTOBuilder.buildRequestBookDTO();
+        BookResponseDTO expectedUpdatedBookDTO = bookResponseDTOBuilder.buildResponseBookDTO();
 
+        when(bookService.updateByIdAndUser(
+                any(AuthenticatedUser.class), eq(expectedBookToUpdateDTO.getId()), eq(expectedBookToUpdateDTO)
+        )).thenReturn(expectedUpdatedBookDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.put(BOOKS_API_URL_PATH + "/" + expectedUpdatedBookDTO.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(expectedBookToUpdateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(expectedBookToUpdateDTO.getId().intValue())))
+                .andExpect(jsonPath("$.name", is(expectedBookToUpdateDTO.getName())))
+                .andExpect(jsonPath("$.isbn", is(expectedBookToUpdateDTO.getIsbn())));
+    }
 }

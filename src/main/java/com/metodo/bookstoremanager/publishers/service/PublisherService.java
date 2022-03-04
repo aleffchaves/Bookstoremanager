@@ -53,7 +53,7 @@ public class PublisherService {
     private void verifyIfExists(String name, String code) {
         Optional<Publisher> duplicatedPublisher = publisherRepository.findByNameOrCode(name, code);
         if (duplicatedPublisher.isPresent()) {
-             throw new PublisherAlreadyExistsException(name, code);
+            throw new PublisherAlreadyExistsException(name, code);
         }
     }
 

@@ -4,6 +4,7 @@ import com.metodo.bookstoremanager.users.dto.UserDTO;
 import com.metodo.bookstoremanager.users.enums.Gender;
 import com.metodo.bookstoremanager.users.enums.Role;
 import lombok.Builder;
+
 import java.time.LocalDate;
 
 @Builder
@@ -34,7 +35,7 @@ public class UserDTOBuilder {
     private Role role = Role.ADMIN;
 
     @Builder.Default
-    private LocalDate birthDate = LocalDate.of(1994, 11,13);
+    private LocalDate birthDate = LocalDate.of(1994, 11, 13);
 
     public UserDTO buildUserDTO() {
         return new UserDTO(

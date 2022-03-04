@@ -44,6 +44,6 @@ public class BookResponseDTOBuilder {
                 chapters,
                 author,
                 publisher
-                );
+        );
     }
 }

@@ -46,10 +46,12 @@ public class AuthorService {
 
     private void verifyIfExists(String authorName) {
         authorRepository.findByName(authorName)
-                .ifPresent(author -> {throw new AuthorAlreadyExistsException(authorName); });
+                .ifPresent(author -> {
+                    throw new AuthorAlreadyExistsException(authorName);
+                });
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         verifyAndGetIfExists(id);
         authorRepository.deleteById(id);
     }
@@ -58,7 +60,6 @@ public class AuthorService {
         return authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException(id));
     }
-
 
 
 }

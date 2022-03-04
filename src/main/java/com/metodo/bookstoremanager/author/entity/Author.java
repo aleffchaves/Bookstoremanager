@@ -21,6 +21,6 @@ public class Author extends Auditable {
     @Column(columnDefinition = "integer default 0")
     private int age;
 
-    @OneToMany(mappedBy = "author",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Book> books;
 }

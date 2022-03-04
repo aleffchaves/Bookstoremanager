@@ -75,18 +75,18 @@ public class AuthenticationServiceTest {
 
     @Test
     void whenUserIsInformedThenUserShouldBeReturned() {
-        UserDTO expectedFoundUserDTO =  userDTOBuilder.buildUserDTO();
+        UserDTO expectedFoundUserDTO = userDTOBuilder.buildUserDTO();
         User expectedFoundUser = userMapper.toModel(expectedFoundUserDTO);
         SimpleGrantedAuthority expectedUserRole = new SimpleGrantedAuthority
                 (
-                "ROLE_" + expectedFoundUserDTO.getRole().getDescription()
+                        "ROLE_" + expectedFoundUserDTO.getRole().getDescription()
                 );
         String expectedUsername = expectedFoundUserDTO.getUsername();
 
         when(userRepository.findByUsername(expectedFoundUserDTO.getUsername()))
                 .thenReturn(Optional.of(expectedFoundUser));
 
-       UserDetails userDetails = authenticationService.loadUserByUsername(expectedUsername);
+        UserDetails userDetails = authenticationService.loadUserByUsername(expectedUsername);
 
         assertThat(userDetails.getUsername(), is(equalTo(expectedFoundUser.getUsername())));
         assertThat(userDetails.getPassword(), is(equalTo(expectedFoundUser.getPassword())));

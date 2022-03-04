@@ -4,11 +4,6 @@ import com.metodo.bookstoremanager.author.builder.AuthorDTOBuilder;
 import com.metodo.bookstoremanager.author.controller.AuthorController;
 import com.metodo.bookstoremanager.author.dto.AuthorDTO;
 import com.metodo.bookstoremanager.author.service.AuthorService;
-import com.metodo.bookstoremanager.books.dto.BookRequestDTO;
-import com.metodo.bookstoremanager.users.builder.JwtRequestBuilder;
-import com.metodo.bookstoremanager.users.dto.JwtRequest;
-import com.metodo.bookstoremanager.users.dto.JwtResponse;
-import com.metodo.bookstoremanager.users.service.AuthenticationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +18,6 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.util.Collections;
 
-import static com.metodo.bookstoremanager.users.controller.UserControllerTest.USERS_API_URL_PATH;
 import static com.metodo.bookstoremanager.utils.JsonConversionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.doNothing;
@@ -47,9 +41,8 @@ public class AuthorControllerTest {
     private AuthorDTOBuilder authorDTOBuilder;
 
 
-
     @BeforeEach
-    void setUp(){
+    void setUp() {
         authorDTOBuilder = AuthorDTOBuilder.builder().build();
         mockMvc = MockMvcBuilders.standaloneSetup(authorController)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
@@ -78,8 +71,8 @@ public class AuthorControllerTest {
         expectedCreatedAuthorDTO.setName(null);
 
         mockMvc.perform(post(AUTHOR_API_URL_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(expectedCreatedAuthorDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(expectedCreatedAuthorDTO)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -105,7 +98,7 @@ public class AuthorControllerTest {
         when(authorService.findAll()).thenReturn(Collections.singletonList(expectedListAuthorDTO));
 
         mockMvc.perform(get(AUTHOR_API_URL_PATH)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(expectedListAuthorDTO.getId().intValue())))
                 .andExpect(jsonPath("$[0].name", is(expectedListAuthorDTO.getName())))
@@ -120,7 +113,7 @@ public class AuthorControllerTest {
         doNothing().when(authorService).delete(expectedAuthorDeletedDTO.getId());
 
         mockMvc.perform(delete(AUTHOR_API_URL_PATH + "/" + expectedAuthorDeletedId)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
 
