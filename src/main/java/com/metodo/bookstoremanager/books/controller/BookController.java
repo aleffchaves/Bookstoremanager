@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/books")
@@ -37,5 +38,10 @@ public class BookController implements BookControllerDocs{
     public BookResponseDTO findByIdAndUser(@AuthenticationPrincipal AuthenticatedUser authenticatedUser,
                                            @PathVariable @Valid Long bookId) {
         return bookService.findByIdAndUser(authenticatedUser, bookId);
+    }
+
+    @GetMapping
+    public List<BookResponseDTO> findAllByUser(@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+        return bookService.findAllByUser(authenticatedUser);
     }
 }
